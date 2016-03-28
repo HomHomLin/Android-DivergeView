@@ -14,5 +14,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mDivergeView = (DivergeView) findViewById(R.id.divergeView);
         mDivergeView.setBitmap(((BitmapDrawable)getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap());
+        mDivergeView.start();
     }
 }

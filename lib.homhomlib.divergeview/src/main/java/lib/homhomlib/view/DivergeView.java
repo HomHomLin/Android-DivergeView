@@ -76,12 +76,18 @@ public class DivergeView extends View{
             if(mPtStart == null) {
                 mPtStart = new PointF(getMeasuredWidth() / 2, getMeasuredHeight() - mBitmap.getHeight());
             }
-            if(mPtEnd == null){
-                mPtEnd = new PointF(mRandom.nextInt(getMeasuredWidth()),0);
-            }
             invalidate();
         }
     };
+
+    public void start(PointF startPoint){
+        setStartPoint(startPoint);
+        start();
+    }
+
+    public boolean isRunning(){
+        return mIsDiverge;
+    }
 
     public void start(){
         mIsDiverge = true;
@@ -92,21 +98,46 @@ public class DivergeView extends View{
     }
 
     public void stop(){
-        mIsDiverge = false;
         this.removeCallbacks(mRunnable);
         if(mDivergeInfos != null){
             mDivergeInfos.clear();
         }
+        mIsDiverge = false;
+    }
+
+    public void release(){
+        stop();
+        mPtEnd = null;
+        mPtStart = null;
+        mBitmap = null;
+        mDivergeInfos = null;
+    }
+
+    public void setStartPoint(PointF point){
+        mPtStart = point;
+    }
+
+    public void setEndPoint(PointF point){
+        mPtEnd = point;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        release();
     }
 
     private DivergeInfo createDivergeNode(){
-        DivergeInfo divergeInfo =
-                new DivergeInfo(
-                        mPtStart.x,
-                        mPtStart.y,
-                        getBreakPointF(2),
-                        getBreakPointF(1));
-        return divergeInfo;
+        PointF endPoint = mPtEnd;
+        if(endPoint == null){
+            endPoint = new PointF(mRandom.nextInt(getMeasuredWidth()),0);
+        }
+        return new DivergeInfo(
+                mPtStart.x,
+                mPtStart.y,
+                getBreakPointF(2),
+                getBreakPointF(1),
+                endPoint);
     }
 
     @Override
@@ -118,7 +149,7 @@ public class DivergeView extends View{
             }
             for(int i = 0 ; i < mDivergeInfos.size(); i ++){
                 DivergeInfo divergeInfo = mDivergeInfos.get(i);
-                if(divergeInfo.mY <=  mPtEnd.y ){
+                if(divergeInfo.mY <=  divergeInfo.mEndPoint.y ){
                     mDivergeInfos.remove(i);
                     i--;
                     continue;
@@ -138,14 +169,14 @@ public class DivergeView extends View{
                 point.x = time1 * (mPtStart.x)
                         + time2 * (divergeInfo.mBreakPoint1.x)
                         + time3 * (divergeInfo.mBreakPoint2.x)
-                        + time4 * (mPtEnd.x);
+                        + time4 * (divergeInfo.mEndPoint.x);
 
                 mDivergeInfos.get(i).mX = point.x;
 
                 point.y = time1 * (mPtStart.y)
                         + time2 * (divergeInfo.mBreakPoint1.y)
                         + time3 * (divergeInfo.mBreakPoint2.y)
-                        + time4 * (mPtEnd.y);
+                        + time4 * (divergeInfo.mEndPoint.y);
 
                 divergeInfo.mY = point.y;
             }

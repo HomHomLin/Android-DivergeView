@@ -1,4 +1,4 @@
-package lib.homhomlib.view;
+package lib.homhomlib.view.test;
 
 import android.graphics.PointF;
 
@@ -12,14 +12,12 @@ public class DivergeInfo {
     public PointF mEndPoint;
     public float mX;
     public float mY;
-    public Object mType;
-    public DivergeInfo(float x, float y, PointF breakPoint1, PointF breakPoint2, PointF endPoint, Object type){
+    public DivergeInfo(float x, float y, PointF breakPoint1, PointF breakPoint2, PointF endPoint){
         mDuration = 0.0f;
         mEndPoint = endPoint;
         mX = x;
         mY = y;
         mBreakPoint1 = breakPoint1;
         mBreakPoint2 = breakPoint2;
-        mType = type;
     }
 }

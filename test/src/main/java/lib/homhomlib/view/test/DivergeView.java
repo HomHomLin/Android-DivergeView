@@ -1,4 +1,4 @@
-package lib.homhomlib.view;
+package lib.homhomlib.view.test;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,13 +10,13 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Linhh on 16/3/28.
  */
 public class DivergeView extends View{
 
+    private Bitmap mBitmap;
     private final Random mRandom = new Random();
 
     private ArrayList<DivergeInfo> mDivergeInfos;
@@ -26,13 +26,11 @@ public class DivergeView extends View{
     private PointF mPtEnd;
 
     private Paint mPaint;
+    private float mDuration = 0.005F;
 
-    private static final float mDuration = 0.005F;
-    private static final int mDefaultHeight = 100;
-    private static final int mDefaultWidth = 100;
-    private static final int mAlphaOffset = 50;
+    private long mAddDuration = 50;
 
-    private DivergeViewProvider mDivergeViewProvider;
+    private long mLastTime = 0;
 
     public DivergeView(Context context) {
         this(context, null);
@@ -46,11 +44,6 @@ public class DivergeView extends View{
         super(context, attrs, defStyleAttr);
         init();
     }
-
-    public interface DivergeViewProvider{
-        public Bitmap getBitmap(Object obj);
-    }
-
 
     private void init(){
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -69,13 +62,20 @@ public class DivergeView extends View{
 
     }
 
-    public void setDivergeViewProvider(DivergeViewProvider divergeViewProvider){
-        mDivergeViewProvider = divergeViewProvider;
+    public void setBitmap(Bitmap bitmap){
+        mBitmap = bitmap;
+        invalidate();
     }
 
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
+            if(mBitmap == null){
+                return;
+            }
+            if(mPtStart == null) {
+                mPtStart = new PointF(getMeasuredWidth() / 2, getMeasuredHeight() - mBitmap.getHeight());
+            }
             invalidate();
         }
     };
@@ -87,15 +87,6 @@ public class DivergeView extends View{
 
     public boolean isRunning(){
         return mIsDiverge;
-    }
-
-    public void setDiverges(Object... objs){
-        if(mDivergeInfos == null){
-            mDivergeInfos = new ArrayList<>();
-        }
-        for(Object obj : objs){
-            mDivergeInfos.add(createDivergeNode(obj));
-        }
     }
 
     public void start(){
@@ -118,6 +109,7 @@ public class DivergeView extends View{
         stop();
         mPtEnd = null;
         mPtStart = null;
+        mBitmap = null;
         mDivergeInfos = null;
     }
 
@@ -132,38 +124,29 @@ public class DivergeView extends View{
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if(mIsDiverge) {
-            release();
-        }
+        release();
     }
 
-    private DivergeInfo createDivergeNode(Object type){
+    private DivergeInfo createDivergeNode(){
         PointF endPoint = mPtEnd;
         if(endPoint == null){
             endPoint = new PointF(mRandom.nextInt(getMeasuredWidth()),0);
-        }
-        int height = mDivergeViewProvider == null ? mDefaultHeight : mDivergeViewProvider.getBitmap(type).getHeight();
-        if(mPtStart == null) {
-            mPtStart = new PointF(getMeasuredWidth() / 2, getMeasuredHeight() - height);//默认起始高度
         }
         return new DivergeInfo(
                 mPtStart.x,
                 mPtStart.y,
                 getBreakPointF(2),
                 getBreakPointF(1),
-                endPoint,
-                type);
+                endPoint);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(mDivergeViewProvider == null){
-            return;
-        }
-        if(mDivergeInfos == null){
-            return;
-        }
-        if(mIsDiverge){
+        if(mBitmap != null && mIsDiverge){
+            if(System.currentTimeMillis() - mLastTime >= mAddDuration){
+                mDivergeInfos.add(createDivergeNode());
+                mLastTime = System.currentTimeMillis();
+            }
             for(int i = 0 ; i < mDivergeInfos.size(); i ++){
                 DivergeInfo divergeInfo = mDivergeInfos.get(i);
                 if(divergeInfo.mY <=  divergeInfo.mEndPoint.y ){
@@ -171,44 +154,41 @@ public class DivergeView extends View{
                     i--;
                     continue;
                 }
-                mPaint.setAlpha((int)(255 * divergeInfo.mY / mPtStart.y));
-                canvas.drawBitmap(mDivergeViewProvider.getBitmap(divergeInfo.mType), divergeInfo.mX, divergeInfo.mY, mPaint);
+                canvas.drawBitmap(mBitmap, divergeInfo.mX, divergeInfo.mY, mPaint);
 
                 float timeLeft = 1.0F - divergeInfo.mDuration;
 
                 divergeInfo.mDuration += mDuration;
 
-                float x, y;
-
-//                PointF point = new PointF();
+                PointF point = new PointF();
 
                 float time1 = timeLeft * timeLeft * timeLeft;
                 float time2 = 3 * timeLeft * timeLeft * divergeInfo.mDuration;
                 float time3 = 3 * timeLeft * divergeInfo.mDuration * divergeInfo.mDuration;
                 float time4 = divergeInfo.mDuration * divergeInfo.mDuration * divergeInfo.mDuration;
-                x = time1 * (mPtStart.x)
+                point.x = time1 * (mPtStart.x)
                         + time2 * (divergeInfo.mBreakPoint1.x)
                         + time3 * (divergeInfo.mBreakPoint2.x)
                         + time4 * (divergeInfo.mEndPoint.x);
 
-                divergeInfo.mX = x;
+                mDivergeInfos.get(i).mX = point.x;
 
-                y = time1 * (mPtStart.y)
+                point.y = time1 * (mPtStart.y)
                         + time2 * (divergeInfo.mBreakPoint1.y)
                         + time3 * (divergeInfo.mBreakPoint2.y)
                         + time4 * (divergeInfo.mEndPoint.y);
 
-                divergeInfo.mY = y;
+                divergeInfo.mY = point.y;
             }
-            this.post(mRunnable);
+            invalidate();
         }
     }
 
     private PointF getBreakPointF(int scale) {
 
         PointF pointF = new PointF();
-        pointF.x = mRandom.nextInt(getMeasuredWidth() - getPaddingRight()) + getPaddingLeft();
-        pointF.y = (mRandom.nextInt(getMeasuredHeight() - getPaddingBottom()) + getPaddingTop())/scale;
+        pointF.x = mRandom.nextInt(getMeasuredWidth());
+        pointF.y = mRandom.nextInt(getMeasuredHeight() - 100)/scale;
         return pointF;
     }
 }

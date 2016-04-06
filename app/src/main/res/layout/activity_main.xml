@@ -16,6 +16,7 @@
         android:text="Start"/>
     <lib.homhomlib.view.DivergeView
         android:id="@+id/divergeView"
+        android:layout_below="@+id/btnStart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </RelativeLayout>

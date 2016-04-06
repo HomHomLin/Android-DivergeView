@@ -1,12 +1,14 @@
 package lib.homhomlib.view.demo;
 
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -15,12 +17,14 @@ import lib.homhomlib.view.DivergeView;
 public class MainActivity extends AppCompatActivity {
     private DivergeView mDivergeView;
     private Button mBtnStart;
+    private ImageView mImageView;
     private ArrayList<Bitmap> mList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mBtnStart = (Button)findViewById(R.id.btnStart);
+        mImageView = (ImageView)findViewById(R.id.iv_start);
         mList = new ArrayList<>();
         mList.add(((BitmapDrawable) ResourcesCompat.getDrawable(getResources(), R.drawable.ic_praise_sm1, null)).getBitmap());
         mList.add(((BitmapDrawable) ResourcesCompat.getDrawable(getResources(),R.drawable.ic_praise_sm2,null)).getBitmap());
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDivergeView.setDiverges(new Object[]{0,1,2,3,4,5,0,1,2,3,4});
+                mDivergeView.setDiverges(new Object[]{0,1,2,3,4,5});
                 mDivergeView.start();
 //                if (mDivergeView.isRunning()) {
 //                    mDivergeView.stop();
@@ -49,11 +53,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if(mList != null){
-            for(Bitmap bitmap : mList){
-                if(!bitmap.isRecycled()){
-                    bitmap.recycle();
-                }
-            }
             mList.clear();
             mList = null;
         }

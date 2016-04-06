@@ -10,7 +10,6 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by Linhh on 16/3/28.
@@ -27,10 +26,10 @@ public class DivergeView extends View{
 
     private Paint mPaint;
 
-    private static final float mDuration = 0.005F;
+    private static final float mDuration = 0.008F;
     private static final int mDefaultHeight = 100;
-    private static final int mDefaultWidth = 100;
-    private static final int mAlphaOffset = 50;
+//    private static final int mDefaultWidth = 100;
+//    private static final int mAlphaOffset = 50;
 
     private DivergeViewProvider mDivergeViewProvider;
 
@@ -83,6 +82,10 @@ public class DivergeView extends View{
     public void start(PointF startPoint){
         setStartPoint(startPoint);
         start();
+    }
+
+    public PointF getStartPoint(){
+        return mPtStart;
     }
 
     public boolean isRunning(){

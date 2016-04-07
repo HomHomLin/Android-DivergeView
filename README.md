@@ -2,6 +2,8 @@
 
 仿美拍直播的点赞动画。
 
+Project site： <https://github.com/HomHomLin/Android-DivergeView>.
+
 ## 效果图
 
 ![p1](https://raw.githubusercontent.com/HomHomLin/Android-DivergeView/master/demo.gif)

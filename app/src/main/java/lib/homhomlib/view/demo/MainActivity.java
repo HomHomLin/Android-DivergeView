@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import lib.homhomlib.view.DivergeView;
+import lib.homhomlib.view2.DivergeView;
 
 public class MainActivity extends AppCompatActivity {
     private DivergeView mDivergeView;
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDivergeView.setDiverges(new Object[]{0,1,2,3,4,5});
+                mDivergeView.setDiverges(new Object[]{0, 1, 2, 3, 4, 5});
                 mDivergeView.start();
 //                if (mDivergeView.isRunning()) {
 //                    mDivergeView.stop();
@@ -45,7 +45,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mDivergeView = (DivergeView) findViewById(R.id.divergeView);
-        mDivergeView.setDivergeViewProvider(new Provider());
+        mDivergeView.post(new Runnable() {
+            @Override
+            public void run() {
+                mDivergeView.setEndPoint(new PointF(mDivergeView.getMeasuredWidth()/2,0));
+                mDivergeView.setDivergeViewProvider(new Provider());
+            }
+        });
 //        mDivergeView.start();
     }
 

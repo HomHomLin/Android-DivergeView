@@ -1,4 +1,4 @@
-package lib.homhomlib.view;
+package lib.homhomlib.view2;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -26,7 +26,7 @@ public class DivergeView extends View{
 
     private Paint mPaint;
 
-    private static final float mDuration = 0.008F;
+    private static final float mDuration = 0.010F;
     private static final int mDefaultHeight = 100;
 //    private static final int mDefaultWidth = 100;
 //    private static final int mAlphaOffset = 50;
@@ -145,15 +145,14 @@ public class DivergeView extends View{
         if(endPoint == null){
             endPoint = new PointF(mRandom.nextInt(getMeasuredWidth()),0);
         }
-        int height = mDivergeViewProvider == null ? mDefaultHeight : mDivergeViewProvider.getBitmap(type).getHeight();
+//        int height = mDivergeViewProvider == null ? mDefaultHeight : mDivergeViewProvider.getBitmap(type).getHeight();
         if(mPtStart == null) {
-            mPtStart = new PointF(getMeasuredWidth() / 2, getMeasuredHeight() - height);//默认起始高度
+            mPtStart = new PointF(getMeasuredWidth() / 2, getMeasuredHeight() - mDefaultHeight);//默认起始高度
         }
         return new DivergeInfo(
                 mPtStart.x,
                 mPtStart.y,
-                getBreakPointF(2),
-                getBreakPointF(1),
+                getBreakPointF(2, 3),
                 endPoint,
                 type);
     }
@@ -183,24 +182,19 @@ public class DivergeView extends View{
 
                 float x, y;
 
-//                PointF point = new PointF();
-
-                //三次贝塞尔
-                float time1 = timeLeft * timeLeft * timeLeft;
-                float time2 = 3 * timeLeft * timeLeft * divergeInfo.mDuration;
-                float time3 = 3 * timeLeft * divergeInfo.mDuration * divergeInfo.mDuration;
-                float time4 = divergeInfo.mDuration * divergeInfo.mDuration * divergeInfo.mDuration;
+                //二次贝塞尔
+                float time1 = timeLeft * timeLeft;
+                float time2 = 2 * timeLeft * divergeInfo.mDuration;
+                float time3 = divergeInfo.mDuration * divergeInfo.mDuration;
                 x = time1 * (mPtStart.x)
-                        + time2 * (divergeInfo.mBreakPoint1.x)
-                        + time3 * (divergeInfo.mBreakPoint2.x)
-                        + time4 * (divergeInfo.mEndPoint.x);
+                        + time2 * (divergeInfo.mBreakPoint.x)
+                        + time3 * (divergeInfo.mEndPoint.x);
 
                 divergeInfo.mX = x;
 
                 y = time1 * (mPtStart.y)
-                        + time2 * (divergeInfo.mBreakPoint1.y)
-                        + time3 * (divergeInfo.mBreakPoint2.y)
-                        + time4 * (divergeInfo.mEndPoint.y);
+                        + time2 * (divergeInfo.mBreakPoint.y)
+                        + time3 * (divergeInfo.mEndPoint.y);
 
                 divergeInfo.mY = y;
             }
@@ -208,11 +202,11 @@ public class DivergeView extends View{
         }
     }
 
-    private PointF getBreakPointF(int scale) {
+    private PointF getBreakPointF(int scale1, int scale2) {
 
         PointF pointF = new PointF();
-        pointF.x = mRandom.nextInt(getMeasuredWidth() - getPaddingRight()) + getPaddingLeft();
-        pointF.y = (mRandom.nextInt(getMeasuredHeight() - getPaddingBottom()) + getPaddingTop())/scale;
+        pointF.x = mRandom.nextInt((getMeasuredWidth() - getPaddingRight() + getPaddingLeft()) / scale1) + getMeasuredWidth() / scale2;
+        pointF.y = mRandom.nextInt((getMeasuredHeight() - getPaddingBottom() + getPaddingTop()) / scale1) + getMeasuredHeight() / scale2;
         return pointF;
     }
 }

@@ -3,10 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lib.homhomlib.view.demo.MainActivity">
 
     <Button
@@ -15,18 +11,18 @@
         android:layout_height="wrap_content"
         android:text="Start"/>
 
-    <lib.homhomlib.view.DivergeView
+    <lib.homhomlib.view2.DivergeView
         android:id="@+id/divergeView"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_width="130dp"
-        android:layout_height="350dp"/>
+        android:layout_height="300dp"/>
     <ImageView
         android:id="@+id/iv_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="20dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/ic_praise_sm1"/>
+        android:background="@drawable/ic_praise_sm6"/>
 </RelativeLayout>

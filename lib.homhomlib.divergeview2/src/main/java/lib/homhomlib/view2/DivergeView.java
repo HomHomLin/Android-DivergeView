@@ -209,4 +209,22 @@ public class DivergeView extends View{
         pointF.y = mRandom.nextInt((getMeasuredHeight() - getPaddingBottom() + getPaddingTop()) / scale1) + getMeasuredHeight() / scale2;
         return pointF;
     }
+
+    public class DivergeInfo {
+        public float mDuration;
+        public PointF mBreakPoint;
+        public PointF mEndPoint;
+        public float mX;
+        public float mY;
+        public Object mType;
+        public DivergeInfo(float x, float y, PointF breakPoint, PointF endPoint, Object type){
+            mDuration = 0.0f;
+            mEndPoint = endPoint;
+            mX = x;
+            mY = y;
+            mBreakPoint = breakPoint;
+            mType = type;
+        }
+    }
+
 }

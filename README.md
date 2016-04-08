@@ -16,7 +16,7 @@ Project site： <https://github.com/HomHomLin/Android-DivergeView>.
 
 该项目有三种效果，分别位于项目的DivergeView、DivergeView2以及test库中，其中DivergeView为贝塞尔三次曲线效果，DivergeView2为贝塞尔二次曲线效果（也是与美拍直播最相似的效果），test为无限循环的发散礼物动画。
 
-选择需要的项目，将项目下的DivergeView.java以及DivergeInfo.jva拷贝到自己的项目中，因为项目比较简单，范例代码参见demo。
+选择需要的项目，将项目下的DivergeView.java拷贝到自己的项目，因为项目比较简单，不提供gradle，范例代码参见demo。
 
 ## Developed By
 

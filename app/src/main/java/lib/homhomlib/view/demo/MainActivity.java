@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnStart;
     private ImageView mImageView;
     private ArrayList<Bitmap> mList;
+    private int mIndex = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
         mBtnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDivergeView.setDiverges(new Object[]{0, 1, 2, 3, 4, 5});
-                mDivergeView.start();
+                if(mIndex == 5){
+                    mIndex = 0 ;
+                }
+                mDivergeView.startDiverges(mIndex);
+                mIndex ++;
 //                if (mDivergeView.isRunning()) {
 //                    mDivergeView.stop();
 //                } else {
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Bitmap getBitmap(Object obj) {
-            return mList.get((int)obj);
+            return mList == null ? null : mList.get((int)obj);
         }
     }
 }

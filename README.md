@@ -23,7 +23,7 @@ Project site： <https://github.com/HomHomLin/Android-DivergeView>.
  * Linhonghong - <linhh90@163.com>
 
 
-##License
+## License
 Copyright 2016 LinHongHong
 
 Licensed under the Apache License, Version 2.0 (the "License");
